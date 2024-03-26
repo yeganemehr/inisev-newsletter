@@ -1,0 +1,732 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 2n5mdf6de3xuj
+info:
+  title: Inisev Newsletter
+  version: '1.0'
+  contact:
+    name: Amir H. Yeganemehr
+    url: 'https://github.com/yeganemehr'
+  license:
+    name: MIT
+servers:
+  - url: 'http://127.0.0.1:8000/api/'
+paths:
+  /websites:
+    get:
+      summary: Get List Of Websites
+      tags: []
+      operationId: get-websites
+      parameters:
+        - $ref: '#/components/parameters/CursorPaginateParameters'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - id: 1
+                        domain: turcotte.info
+                        title: ipsam
+                        created_at: '2024-03-26T22:09:36.000000Z'
+                        updated_at: '2024-03-26T22:09:36.000000Z'
+                      - id: 2
+                        domain: hartmann.com
+                        title: culpa
+                        created_at: '2024-03-26T22:09:36.000000Z'
+                        updated_at: '2024-03-26T22:09:36.000000Z'
+                      - id: 3
+                        domain: streich.com
+                        title: cupiditate
+                        created_at: '2024-03-26T22:09:36.000000Z'
+                        updated_at: '2024-03-26T22:09:36.000000Z'
+                      - id: 4
+                        domain: dubuque.org
+                        title: odio
+                        created_at: '2024-03-26T22:09:36.000000Z'
+                        updated_at: '2024-03-26T22:09:36.000000Z'
+                      - id: 5
+                        domain: reilly.com
+                        title: sit
+                        created_at: '2024-03-26T22:09:36.000000Z'
+                        updated_at: '2024-03-26T22:09:36.000000Z'
+                    links:
+                      first: null
+                      last: null
+                      prev: null
+                      next: null
+                    meta:
+                      path: 'http://localhost/api/websites'
+                      per_page: 15
+                      next_cursor: null
+                      prev_cursor: null
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Website'
+                  links:
+                    type: object
+                    required:
+                      - first
+                      - last
+                      - prev
+                      - next
+                    properties:
+                      first:
+                        nullable: true
+                      last:
+                        nullable: true
+                      prev:
+                        nullable: true
+                      next:
+                        nullable: true
+                  meta:
+                    type: object
+                    required:
+                      - path
+                      - per_page
+                      - next_cursor
+                      - prev_cursor
+                    properties:
+                      path:
+                        type: string
+                      per_page:
+                        type: integer
+                      next_cursor:
+                        nullable: true
+                      prev_cursor:
+                        nullable: true
+                required:
+                  - data
+                  - links
+                  - meta
+    post:
+      summary: Create a website
+      operationId: post-websites
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Website'
+                required:
+                  - data
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    message: The domain has already been taken.
+                    errors:
+                      domain:
+                        - The domain has already been taken.
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      domain:
+                        type: array
+                        items:
+                          type: string
+                      title:
+                        type: array
+                        items:
+                          type: string
+              examples:
+                duplicate-domain:
+                  value:
+                    message: The domain has already been taken.
+                    errors:
+                      domain:
+                        - The domain has already been taken.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                domain:
+                  type: string
+                title:
+                  type: string
+              required:
+                - domain
+                - title
+  '/websites/{website}':
+    parameters:
+      - schema:
+          type: string
+        name: website
+        in: path
+        required: true
+    get:
+      summary: Get Website Info
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Website'
+      operationId: get-websites-website
+    put:
+      summary: Update Website Info
+      operationId: put-websites-website
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Website'
+                required:
+                  - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                domain:
+                  type: string
+    delete:
+      summary: Delete a Website
+      operationId: delete-websites-website
+      responses:
+        '204':
+          description: No Content
+  '/websites/{website}/posts':
+    parameters:
+      - schema:
+          type: string
+        name: website
+        in: path
+        required: true
+    get:
+      summary: Get List Posts Of A Website
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - id: 1
+                        website_id: 1
+                        local_id: b36c2c21-085f-34f5-8829-a6393575bbff
+                        title: aperiam eum delectus
+                        description: Aut rerum aliquid et aut quia. Recusandae amet minus praesentium ut illum neque alias. Et non velit qui dolores asperiores dolorem repellat.
+                        url: 'http://roob.com/'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 2
+                        website_id: 1
+                        local_id: 1f0d8761-d3b8-353c-a33c-9b4df5476abe
+                        title: aspernatur ut quia
+                        description: Deleniti ab eum reprehenderit eius. Velit quaerat asperiores explicabo eligendi quidem ut sapiente. Autem debitis et tempora ea assumenda voluptatem minus.
+                        url: 'http://www.bogan.net/nostrum-et-molestiae-amet-rerum-consequatur-asperiores-dolor-accusamus.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 3
+                        website_id: 1
+                        local_id: ef02ae73-51ce-3e34-9804-c0d361be2d3c
+                        title: architecto culpa impedit
+                        description: Eaque eum et dolore voluptatem aperiam ea. Iste doloremque voluptas expedita qui enim qui et. Vel dolore ipsum sint vel minus rerum.
+                        url: 'http://www.cronin.net/atque-placeat-nisi-perferendis-distinctio-maxime-repellat.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 4
+                        website_id: 1
+                        local_id: b6db4844-7ee9-3cac-9db7-7e10a47faa0a
+                        title: et magnam dicta
+                        description: Facere est tempora natus adipisci dolor quam. Voluptates facilis similique natus ea voluptatem velit. Rerum quia et nostrum rerum.
+                        url: 'https://murphy.org/ducimus-qui-vel-sunt-ex-et-quod.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 5
+                        website_id: 1
+                        local_id: f3b199db-d059-33e3-98da-cfdded9cb419
+                        title: ea illo omnis
+                        description: Dolores itaque accusantium impedit asperiores. Vel ut dicta consequuntur beatae sed. Accusamus provident quas est consequatur fuga dolorem.
+                        url: 'http://hettinger.com/libero-eligendi-illo-alias-distinctio-qui'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                    links:
+                      first: null
+                      last: null
+                      prev: null
+                      next: null
+                    meta:
+                      path: 'http://localhost/api/websites/1/posts'
+                      per_page: 15
+                      next_cursor: null
+                      prev_cursor: null
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  links:
+                    type: object
+                    required:
+                      - first
+                      - last
+                      - prev
+                      - next
+                    properties:
+                      first:
+                        type: string
+                        nullable: true
+                      last:
+                        type: string
+                        nullable: true
+                      prev:
+                        type: string
+                        nullable: true
+                      next:
+                        type: string
+                        nullable: true
+                  meta:
+                    type: object
+                    required:
+                      - path
+                      - per_page
+                      - next_cursor
+                      - prev_cursor
+                    properties:
+                      path:
+                        type: string
+                      per_page:
+                        type: integer
+                      next_cursor:
+                        type: string
+                        nullable: true
+                      prev_cursor:
+                        type: string
+                        nullable: true
+                required:
+                  - data
+                  - links
+                  - meta
+      operationId: get-websites-website-posts
+      parameters:
+        - $ref: '#/components/parameters/CursorPaginateParameters'
+    post:
+      summary: Create A Post
+      operationId: post-websites-website-posts
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
+                required:
+                  - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                local_id:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                url:
+                  type: string
+                  format: uri
+              required:
+                - local_id
+                - title
+                - description
+                - url
+  '/websites/{website}/subscribers':
+    parameters:
+      - schema:
+          type: string
+        name: website
+        in: path
+        required: true
+    get:
+      summary: Get List Subscribers Of A Website
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - id: 1
+                        website_id: 1
+                        local_id: b36c2c21-085f-34f5-8829-a6393575bbff
+                        title: aperiam eum delectus
+                        description: Aut rerum aliquid et aut quia. Recusandae amet minus praesentium ut illum neque alias. Et non velit qui dolores asperiores dolorem repellat.
+                        url: 'http://roob.com/'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 2
+                        website_id: 1
+                        local_id: 1f0d8761-d3b8-353c-a33c-9b4df5476abe
+                        title: aspernatur ut quia
+                        description: Deleniti ab eum reprehenderit eius. Velit quaerat asperiores explicabo eligendi quidem ut sapiente. Autem debitis et tempora ea assumenda voluptatem minus.
+                        url: 'http://www.bogan.net/nostrum-et-molestiae-amet-rerum-consequatur-asperiores-dolor-accusamus.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 3
+                        website_id: 1
+                        local_id: ef02ae73-51ce-3e34-9804-c0d361be2d3c
+                        title: architecto culpa impedit
+                        description: Eaque eum et dolore voluptatem aperiam ea. Iste doloremque voluptas expedita qui enim qui et. Vel dolore ipsum sint vel minus rerum.
+                        url: 'http://www.cronin.net/atque-placeat-nisi-perferendis-distinctio-maxime-repellat.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 4
+                        website_id: 1
+                        local_id: b6db4844-7ee9-3cac-9db7-7e10a47faa0a
+                        title: et magnam dicta
+                        description: Facere est tempora natus adipisci dolor quam. Voluptates facilis similique natus ea voluptatem velit. Rerum quia et nostrum rerum.
+                        url: 'https://murphy.org/ducimus-qui-vel-sunt-ex-et-quod.html'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                      - id: 5
+                        website_id: 1
+                        local_id: f3b199db-d059-33e3-98da-cfdded9cb419
+                        title: ea illo omnis
+                        description: Dolores itaque accusantium impedit asperiores. Vel ut dicta consequuntur beatae sed. Accusamus provident quas est consequatur fuga dolorem.
+                        url: 'http://hettinger.com/libero-eligendi-illo-alias-distinctio-qui'
+                        created_at: '2024-03-26T22:19:02.000000Z'
+                        updated_at: '2024-03-26T22:19:02.000000Z'
+                    links:
+                      first: null
+                      last: null
+                      prev: null
+                      next: null
+                    meta:
+                      path: 'http://localhost/api/websites/1/posts'
+                      per_page: 15
+                      next_cursor: null
+                      prev_cursor: null
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subscriber'
+                  links:
+                    type: object
+                    required:
+                      - first
+                      - last
+                      - prev
+                      - next
+                    properties:
+                      first:
+                        type: string
+                        nullable: true
+                      last:
+                        type: string
+                        nullable: true
+                      prev:
+                        type: string
+                        nullable: true
+                      next:
+                        type: string
+                        nullable: true
+                  meta:
+                    type: object
+                    required:
+                      - path
+                      - per_page
+                      - next_cursor
+                      - prev_cursor
+                    properties:
+                      path:
+                        type: string
+                      per_page:
+                        type: integer
+                      next_cursor:
+                        type: string
+                        nullable: true
+                      prev_cursor:
+                        type: string
+                        nullable: true
+                required:
+                  - data
+                  - links
+                  - meta
+      operationId: get-websites-website-subscribers
+      parameters:
+        - $ref: '#/components/parameters/CursorPaginateParameters'
+    post:
+      summary: Create A Subscriber
+      operationId: post-websites-website-subscribers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subscriber'
+                required:
+                  - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+              required:
+                - name
+                - email
+  '/websites/{website}/posts/{post}':
+    parameters:
+      - schema:
+          type: string
+        name: website
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: post
+        in: path
+        required: true
+    get:
+      summary: Get A Post
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
+                required:
+                  - data
+      operationId: get-websites-website-posts-post
+    put:
+      summary: Update A Post
+      operationId: put-websites-website-posts-post
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Post'
+                required:
+                  - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resend:
+                  type: boolean
+                title:
+                  type: string
+                description:
+                  type: string
+                url:
+                  type: string
+              required:
+                - resend
+    delete:
+      summary: Delete A Post
+      operationId: delete-websites-website-posts-post
+      responses:
+        '204':
+          description: No Content
+  '/websites/{website}/subscribers/{subscriber}':
+    parameters:
+      - schema:
+          type: string
+        name: website
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: subscriber
+        in: path
+        required: true
+    get:
+      summary: Get A Post
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subscriber'
+                required:
+                  - data
+      operationId: get-websites-website-subscribers-subscriber
+    put:
+      summary: Update A Post
+      operationId: put-websites-website-subscribers-subscriber
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subscriber'
+                required:
+                  - data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+    delete:
+      summary: Delete A Post
+      operationId: delete-websites-website-subscribers-subscriber
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    Subscriber:
+      type: object
+      properties:
+        id:
+          type: integer
+        website_id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      x-examples:
+        example-1:
+          id: 1
+          website_id: 1
+          name: Angela McClure
+          email: bfeeney@haley.com
+          created_at: '2024-03-26T22:25:51.000000Z'
+          updated_at: '2024-03-26T22:25:51.000000Z'
+    Website:
+      type: object
+      properties:
+        id:
+          type: integer
+        domain:
+          type: string
+        title:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      x-examples:
+        example-1:
+          id: 1
+          domain: turcotte.info
+          title: ipsam
+          created_at: '2024-03-26T22:09:36.000000Z'
+          updated_at: '2024-03-26T22:09:36.000000Z'
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        website_id:
+          type: integer
+        local_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      x-examples:
+        example-1:
+          id: 1
+          website_id: 1
+          local_id: b36c2c21-085f-34f5-8829-a6393575bbff
+          title: aperiam eum delectus
+          description: Aut rerum aliquid et aut quia. Recusandae amet minus praesentium ut illum neque alias. Et non velit qui dolores asperiores dolorem repellat.
+          url: 'http://roob.com/'
+          created_at: '2024-03-26T22:19:02.000000Z'
+          updated_at: '2024-03-26T22:19:02.000000Z'
+  requestBodies: {}
+  parameters:
+    CursorPaginateParameters:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: ' an encoded string containing the location that the next paginated query should start'
