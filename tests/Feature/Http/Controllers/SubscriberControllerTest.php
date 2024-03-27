@@ -39,7 +39,6 @@ class SubscriberControllerTest extends TestCase
                     'prev',
                 ],
             ]);
-        dd(($response->baseResponse->getContent()));
         $this->assertCount(5, $response['data']);
     }
 
