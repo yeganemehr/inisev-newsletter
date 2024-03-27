@@ -10,7 +10,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: 'http://127.0.0.1:8000/api/'
+  - url: 'https://inisev-newsletter.yeganemehr.net/api/'
 paths:
   /websites:
     get:
@@ -60,7 +60,7 @@ paths:
                       prev: null
                       next: null
                     meta:
-                      path: 'http://localhost/api/websites'
+                      path: 'https://inisev-newsletter.yeganemehr.net/api/websites'
                       per_page: 15
                       next_cursor: null
                       prev_cursor: null
@@ -284,7 +284,7 @@ paths:
                       prev: null
                       next: null
                     meta:
-                      path: 'http://localhost/api/websites/1/posts'
+                      path: 'https://inisev-newsletter.yeganemehr.net/api/websites/1/posts'
                       per_page: 15
                       next_cursor: null
                       prev_cursor: null
@@ -439,7 +439,7 @@ paths:
                       prev: null
                       next: null
                     meta:
-                      path: 'http://localhost/api/websites/1/posts'
+                      path: 'https://inisev-newsletter.yeganemehr.net/api/websites/1/posts'
                       per_page: 15
                       next_cursor: null
                       prev_cursor: null
